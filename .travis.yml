@@ -18,7 +18,7 @@ before_install:
    - source <(curl -SLs https://raw.githubusercontent.com/adafruit/travis-ci-arduino/master/install.sh)
 
 install:
-- arduino --install-library "PID","ArduinoJson","PubSubClient","TSIC"
+- arduino --install-library "PID","ArduinoJson:5.13.3","PubSubClient","TSIC"
 
 script:
    - export MAIN_PLATFORMS='declare -A main_platforms=( [esp8266]="esp8266:esp8266:huzzah:FlashSize=4M3M,CpuFrequency=80" )'
