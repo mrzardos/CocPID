@@ -10,7 +10,7 @@ git:
 env:
   global:
      - ARDUINO_IDE_VERSION="1.8.7"
-     - PRETTYNAME="Adafruit FT6206 Arduino Library"
+     - PRETTYNAME="ESPressIoT PID for espresso machines"
 # Optional, will default to "$TRAVIS_BUILD_DIR/Doxyfile"
 #    - DOXYFILE: $TRAVIS_BUILD_DIR/Doxyfile
 
@@ -21,6 +21,7 @@ install:
 - arduino --install-library "PID","ArduinoJson"
 
 script:
+   - export MAIN_PLATFORMS='declare -A main_platforms=( [esp8266]="esp8266:esp8266:huzzah:FlashSize=4M3M,CpuFrequency=80" )'
    - build_main_platforms
 
 # Generate and deploy documentation
