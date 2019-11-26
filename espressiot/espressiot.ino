@@ -12,6 +12,7 @@
 
 #define WIFI_SSID "HomeNetwork"
 #define WIFI_PASS "MyPassword"
+#define MAX_CONNECTION_RETRIES 20
 
 // options for special modules
 #define ENABLE_JSON
@@ -74,13 +75,7 @@ void setup()
   } else {
     Serial.println("Mounted.");
   }
-
-  /*if (!saveConfig()) {
-    Serial.println("Failed to save config");
-  } else {
-    Serial.println("Config saved");
-  }*/
-
+ 
   Serial.println("Loading config...");
   if (!loadConfig()) {
     Serial.println("Failed to load config. Using default values and creating config...");
@@ -100,7 +95,8 @@ void setup()
   Serial.print("MAC address: ");
   Serial.println(WiFi.macAddress());
 
-  while (WiFi.status() != WL_CONNECTED) {
+  Serial.print("Connecting to Wifi AP");
+  for (int i=0; i<MAX_CONNECTION_RETRIES && WiFi.status()!=WL_CONNECTED; i++) {
     delay(500);
     Serial.print(".");
   }
