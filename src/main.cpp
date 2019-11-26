@@ -5,6 +5,7 @@
 // Uses PID library
 //
 
+#include <Arduino.h>
 #include <PID_v1.h>
 #include <ESP8266WiFi.h>
 
@@ -22,33 +23,14 @@
 //#define SIMULATION_MODE
 
 //
-// STANDARD reset values based on Gaggia CC
-//
-#define S_P 115.0
-#define S_I 4.0
-#define S_D 850.0
-#define S_aP 100.0
-#define S_aI 0.0
-#define S_aD 0.0
-#define S_TSET 94.0
-#define S_TBAND 1.5
-
-//
 // Intervals for I/O
 //
 #define HEATER_INTERVAL 1000
 #define DISPLAY_INTERVAL 1000
 #define PID_INTERVAL 200
 
-//
-// global variables
-//
-double gTargetTemp=S_TSET;
-double gOvershoot=S_TBAND;
 double gInputTemp=20.0;
 double gOutputPwr=0.0;
-double gP = S_P, gI = S_I, gD = S_D;
-double gaP = S_aP, gaI = S_aI, gaD = S_aD;
 
 unsigned long time_now=0;
 unsigned long time_last=0;

@@ -6,6 +6,8 @@
 // based on the blog entry http://brettbeauregard.com/blog/2012/01/arduino-pid-autotune-library/
 //
 
+#include <PID_v1.h>
+
 double aTuneStep=100.0, aTuneThres=0.2;
 double AvgUpperT=0, AvgLowerT=0;
 int UpperCnt=0, LowerCnt=0;
