@@ -57,7 +57,7 @@ void MQTT_callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(val);
   
   if (strcmp(topic,"ESPressIoT/config/tset")==0){
-    if(val>1e-3) gTargetTemp = val;
+    if(val>1e-3) pidStatus.targetTemperature = val;
   }
   else if (strcmp(topic,"ESPressIoT/config/toggle")==0){
     poweroffMode = (!poweroffMode);
@@ -76,11 +76,11 @@ void loopMQTT() {
     MQTT_reconnect();
   }
   client.loop();
-  dtostrf(gInputTemp,10,2,buf_msg);
+  dtostrf(pidStatus.inputTemperature,10,2,buf_msg);
   client.publish("ESPressIoT/temp", buf_msg);
-  dtostrf(gOutputPwr,10,2,buf_msg);
+  dtostrf(pidStatus.outputPower,10,2,buf_msg);
   client.publish("ESPressIoT/power", buf_msg);
-  dtostrf(gTargetTemp,10,2,buf_msg);
+  dtostrf(pidStatus.targetTemperature,10,2,buf_msg);
   client.publish("ESPressIoT/tset", buf_msg);
   
 }

@@ -46,23 +46,23 @@ void tuning_loop() {
   // count seconds between power-on-cycles
   //
   //
-  if(gInputTemp<(gTargetTemp-aTuneThres)) { // below lower threshold -> power on
-    if(gOutputPwr==0) { // just fell below threshold
+  if(pidStatus.inputTemperature<(pidStatus.targetTemperature-aTuneThres)) { // below lower threshold -> power on
+    if(pidStatus.outputPower==0) { // just fell below threshold
       if(tune_count==0) tune_start=time_now;
       tune_time=time_now;
       tune_count++;   
-      AvgLowerT += gInputTemp;
+      AvgLowerT += pidStatus.inputTemperature;
       LowerCnt++;
     }
-    gOutputPwr=aTuneStep;
+    pidStatus.outputPower=aTuneStep;
     setHeatPowerPercentage(aTuneStep);
   }
-  else if(gInputTemp>(gTargetTemp+aTuneThres)) { // above upper threshold -> power off
-    if(gOutputPwr==aTuneStep) { // just crossed upper threshold
-      AvgUpperT += gInputTemp;
+  else if(pidStatus.inputTemperature>(pidStatus.targetTemperature+aTuneThres)) { // above upper threshold -> power off
+    if(pidStatus.outputPower==aTuneStep) { // just crossed upper threshold
+      AvgUpperT += pidStatus.inputTemperature;
       UpperCnt++;
     }
-    gOutputPwr=0;
+    pidStatus.outputPower=0;
     setHeatPowerPercentage(0);
   }  
 }

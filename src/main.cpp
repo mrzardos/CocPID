@@ -8,9 +8,11 @@
 #include <Arduino.h>
 #include <PID_v1.h>
 #include <ESP8266WiFi.h>
+#include <ControllerConfig.h>
+#include <ControllerStatus.h>
+#include <TSicSensor.h>
 
 // WIFI
-
 #define WIFI_SSID "HomeNetwork"
 #define WIFI_PASS "MyPassword"
 
@@ -29,9 +31,6 @@
 #define DISPLAY_INTERVAL 1000
 #define PID_INTERVAL 200
 
-double gInputTemp=20.0;
-double gOutputPwr=0.0;
-
 unsigned long time_now=0;
 unsigned long time_last=0;
 
@@ -40,33 +39,29 @@ boolean osmode = false;
 boolean poweroffMode = false;
 
 //
-// gloabl classes
+// gloabl variables and classes
 //
-PID ESPPID(&gInputTemp, &gOutputPwr, &gTargetTemp, gP, gI, gD, DIRECT);
+ControllerStatus pidStatus;
+PID ESPPID(&pidStatus.inputTemperature, &pidStatus.outputPower, &pidStatus.targetTemperature, pidStatus.P, pidStatus.I, pidStatus.D, DIRECT);
+ControllerConfig espressiotConfig;
 
 void setup()
 {
-  gOutputPwr=0;
+  pidStatus.outputPower=0;
 
   Serial.begin(115200);
 
   Serial.println("Mounting SPIFFS...");
-  if(!prepareFS()) {
+  if(espressiotConfig.prepareFS()) {
     Serial.println("Failed to mount SPIFFS !");
   } else {
     Serial.println("Mounted.");
   }
 
-  /*if (!saveConfig()) {
-    Serial.println("Failed to save config");
-  } else {
-    Serial.println("Config saved");
-  }*/
-
   Serial.println("Loading config...");
-  if (!loadConfig()) {
+  if (!espressiotConfig.loadConfig()) {
     Serial.println("Failed to load config. Using default values and creating config...");
-    if (!saveConfig()) {
+    if (!espressiotConfig.saveConfig()) {
      Serial.println("Failed to save config");
     } else {
       Serial.println("Config saved");
@@ -116,12 +111,12 @@ void setup()
 }
 
 void serialStatus() {
-  Serial.print(gInputTemp, 2); Serial.print(" ");
-  Serial.print(gTargetTemp, 2); Serial.print(" ");
-  Serial.print(gOutputPwr, 2); Serial.print(" ");
-  Serial.print(gP, 2); Serial.print(" ");
-  Serial.print(gI, 2); Serial.print(" ");
-  Serial.print(gD, 2); Serial.print(" ");
+  Serial.print(pidStatus.inputTemperature, 2); Serial.print(" ");
+  Serial.print(pidStatus.targetTemperature, 2); Serial.print(" ");
+  Serial.print(pidStatus.outputPower, 2); Serial.print(" ");
+  Serial.print(pidStatus.P, 2); Serial.print(" ");
+  Serial.print(pidStatus.I, 2); Serial.print(" ");
+  Serial.print(pidStatus.D, 2); Serial.print(" ");
   Serial.print(ESPPID.GetKp(), 2); Serial.print(" ");
   Serial.print(ESPPID.GetKi(), 2); Serial.print(" ");
   Serial.print(ESPPID.GetKd(), 2);
@@ -132,11 +127,11 @@ void loop() {
   time_now=millis();
 
   updateTempSensor(); 
-  gInputTemp=getTemp();
+  pidStatus.inputTemperature=getTemp();
 
   if(abs(time_now-time_last)>=PID_INTERVAL or time_last > time_now) {
     if(poweroffMode==true) {
-      gOutputPwr=0;
+      pidStatus.outputPower=0;
       setHeatPowerPercentage(0);
     }
     else if(tuning==true)
@@ -144,16 +139,16 @@ void loop() {
       tuning_loop();
     }
     else  {
-      if( !osmode && abs(gTargetTemp-gInputTemp)>=gOvershoot ) {        
-        ESPPID.SetTunings(gaP, gaI, gaD);
+      if( !osmode && abs(pidStatus.targetTemperature-pidStatus.inputTemperature)>=espressiotConfig.getOvershootBand()) {
+        ESPPID.SetTunings(espressiotConfig.getAdaptiveP(), espressiotConfig.getAdaptiveI(), espressiotConfig.getAdaptiveD());
         osmode=true;
       }
-      else if( osmode && abs(gTargetTemp-gInputTemp)<gOvershoot ) {
-        ESPPID.SetTunings(gP,gI,gD);
+      else if( osmode && abs(pidStatus.targetTemperature-pidStatus.inputTemperature)<espressiotConfig.getOvershootBand() ) {
+        ESPPID.SetTunings(espressiotConfig.getP(), espressiotConfig.getI(), espressiotConfig.getD());
         osmode=false;
       }
       if(ESPPID.Compute()==true) {   
-        setHeatPowerPercentage(gOutputPwr);
+        setHeatPowerPercentage(pidStatus.outputPower);
       }
     }        
     

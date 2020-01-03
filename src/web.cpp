@@ -32,9 +32,9 @@ void handleNotFound() {
 
 void handleRoot() {
   String message = "<head><meta http-equiv=\"refresh\" content=\"2\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n<title>EspressIoT</title></head><h1>EspressIoT</h1>\n";
-  message += "Measured Temperature: " + String(gInputTemp) + "<br/>\n";
-  message += "Target Temperature: " + String(gTargetTemp) + "<br/>\n";
-  message += "Heater Power: " + String(gOutputPwr) + "<br/>\n";
+  message += "Measured Temperature: " + String(pidStatus.inputTemperature) + "<br/>\n";
+  message += "Target Temperature: " + String(pidStatus.targetTemperature) + "<br/>\n";
+  message += "Heater Power: " + String(pidStatus.outputPower) + "<br/>\n";
   message += "\n";
   message += "<hr/>\n";
   if(poweroffMode) message += "<a href=\"./toggleheater\"><button style=\"background-color:#FF0000\">Toggle Heater</button></a><br/>\n";
@@ -52,7 +52,7 @@ void handleConfig() {
     message += "<hr/>\n";
   }
   message += "<form action=\"set_config\">\nTarget Temperature:<br>\n";
-  message += "<input type=\"text\" name=\"tset\" value=\"" + String(gTargetTemp) +"\"><br/><br/>\n";
+  message += "<input type=\"text\" name=\"tset\" value=\"" + String(pidStatus.targetTemperature) +"\"><br/><br/>\n";
   message += "<form action=\"set_config\">\nThreshold for adaptive PID:<br>\n";
   message += "<input type=\"text\" name=\"tband\" value=\"" + String(gOvershoot) +"\"><br/><br/>\n";
   message += "normal PID:<br>\n P <input type=\"text\" name=\"pgain\" value=\"" + String(gP) + "\"><br/>\n";
@@ -100,7 +100,7 @@ void handleSetConfig() {
   for ( uint8_t i = 0; i < server.args(); i++ ) {
     if(server.argName(i)=="tset") {
           message += "new tset: " + server.arg ( i ) + "<br/>\n";
-          gTargetTemp = ( (server.arg(i)).toFloat() );
+          pidStatus.targetTemperature = ( (server.arg(i)).toFloat() );
     }
     else if(server.argName(i)=="tband") {
           message += "new tset: " + server.arg ( i ) + "<br/>\n";
