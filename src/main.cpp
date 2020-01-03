@@ -12,6 +12,19 @@
 #include <ControllerStatus.h>
 #include <TSicSensor.h>
 
+// external definitions
+extern void setupWebSrv();
+extern void setupMQTT();
+extern void setupHeater();
+extern void setupSensor();
+extern void updateTempSensor();
+extern void setHeatPowerPercentage(float);
+extern float getTemp();
+extern void tuning_loop();
+extern void loopMQTT();
+extern void updateHeater();
+extern void loopWebSrv();
+
 // WIFI
 #define WIFI_SSID "HomeNetwork"
 #define WIFI_PASS "MyPassword"
@@ -100,7 +113,7 @@ void setup()
   setupSensor();
 
   // start PID
-  ESPPID.SetTunings(gP, gI, gD);
+  ESPPID.SetTunings(pidStatus.P, pidStatus.I, pidStatus.D);
   ESPPID.SetSampleTime(PID_INTERVAL);
   ESPPID.SetOutputLimits(0, 1000);
   ESPPID.SetMode(AUTOMATIC);

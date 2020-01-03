@@ -8,11 +8,13 @@
 
 class TemperatureSensor {
 public:
-    TemperatureSensor();
-    virtual ~TemperatureSensor();
+    TemperatureSensor() {}
+
+    virtual ~TemperatureSensor() {}
 
 public:
     virtual void initialize() = 0;
+
     virtual void readMeasurement() = 0;
 
     virtual float getTemperature() = 0;

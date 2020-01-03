@@ -55,7 +55,7 @@ bool ControllerConfig::loadConfig(String fileName = "/config.json") {
 
     wifiSsid = jsonDoc["ssid"];
     wifiPassword = jsonDoc["password"];
-    pidStatus.targetTemperature = jsonDoc["tset"];
+    gTargetTemp = jsonDoc["tset"];
     gOvershoot = jsonDoc["tband"];
     gP = jsonDoc["P"], gI = jsonDoc["I"], gD = jsonDoc["D"];
     gaP = jsonDoc["aP"], gaI = jsonDoc["aI"], gaD = jsonDoc["aD"];
@@ -67,7 +67,7 @@ bool ControllerConfig::saveConfig() {
     StaticJsonDocument<CONFIG_BUFFER_SIZE> jsonDoc;
     jsonDoc["ssid"] = wifiSsid;
     jsonDoc["password"] = wifiPassword;
-    jsonDoc["tset"] = pidStatus.targetTemperature;
+    jsonDoc["tset"] = gTargetTemp;
     jsonDoc["tband"] = gOvershoot;
     jsonDoc["P"] = gP, jsonDoc["I"] = gI, jsonDoc["D"] = gD;
     jsonDoc["aP"] = gaP, jsonDoc["aI"] = gaI, jsonDoc["aD"] = gaD;
@@ -94,16 +94,16 @@ void ControllerConfig::resetConfig() {
     gaP = S_aP;
     gaI = S_aI;
     gaD = S_aD;
-    pidStatus.targetTemperature = S_TSET;
+    gTargetTemp = S_TSET;
     gOvershoot = S_TBAND;
 }
 
 double ControllerConfig::getTargetTemperature() {
-    return pidStatus.targetTemperature;
+    return gTargetTemp;
 }
 
 void ControllerConfig::setTargetTemperature(double targetTemperature) {
-    pidStatus.targetTemperature = targetTemperature;
+    gTargetTemp = targetTemperature;
 }
 
 double ControllerConfig::getOvershootBand() {
@@ -163,7 +163,7 @@ void ControllerConfig::setAdaptiveD(double parameterValue) {
     gaD = parameterValue;
 }
 
-char *ControllerConfig::getWifiSsid() const {
+const char *ControllerConfig::getWifiSsid() const {
     return wifiSsid;
 }
 
@@ -171,7 +171,7 @@ void ControllerConfig::setWifiSsid(char *wifiSsid) {
     ControllerConfig::wifiSsid = wifiSsid;
 }
 
-char *ControllerConfig::getWifiPassword() const {
+const char *ControllerConfig:: getWifiPassword() const {
     return wifiPassword;
 }
 

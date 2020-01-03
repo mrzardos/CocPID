@@ -5,7 +5,7 @@
 #ifndef ESPRESSIOT_CONTROLLERSTATUS_H
 #define ESPRESSIOT_CONTROLLERSTATUS_H
 
-struct ControllerStatus{
+struct ControllerStatus {
     double inputTemperature;
     double outputPower;
     double targetTemperature;

@@ -24,8 +24,8 @@ class ControllerConfig {
 private:
     File configFile;
 
-    char *wifiSsid;
-    char *wifiPassword;
+    const char *wifiSsid;
+    const char *wifiPassword;
 
     double gTargetTemp;
     double gOvershoot;
@@ -37,11 +37,11 @@ private:
 public:
     ControllerConfig();
 
-    char *getWifiSsid() const;
+    const char * getWifiSsid() const;
 
     void setWifiSsid(char *wifiSsid);
 
-    char *getWifiPassword() const;
+    const char * getWifiPassword() const;
 
     void setWifiPassword(char *wifiPassword);
 

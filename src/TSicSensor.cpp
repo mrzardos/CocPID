@@ -3,6 +3,7 @@
 //
 
 #include "Arduino.h"
+#include <TSIC.h>
 #include <TSicSensor.h>
 
 TSicSensor::TSicSensor() {
