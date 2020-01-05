@@ -35,7 +35,7 @@ bool ControllerConfig::prepareFS() {
 }
 
 bool ControllerConfig::loadConfig() {
-    loadConfig("/config.json");
+    return loadConfig("/config.json");
 }
 
 bool ControllerConfig::loadConfig(String fileName = "/config.json") {

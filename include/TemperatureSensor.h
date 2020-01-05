@@ -5,7 +5,6 @@
 #ifndef ESPRESSIOT_TEMPERATURESENSOR_H
 #define ESPRESSIOT_TEMPERATURESENSOR_H
 
-
 class TemperatureSensor {
 public:
     TemperatureSensor() {}
