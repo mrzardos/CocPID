@@ -24,7 +24,7 @@ float HeatingSimulation::getHeaterPower() {
 
 void HeatingSimulation::update() {
     /*void updateHeater() {
-        heatCurrentTime = time_now;
+        heatCurrentTime = processingTimestamp;
         if(heatCurrentTime - heatLastTime >= 1000 or heatLastTime > heatCurrentTime) {
             heaterSavedState = getHeatCycles();
             heatLastTime = heatCurrentTime;

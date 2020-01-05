@@ -8,6 +8,7 @@
 #include <Arduino.h>
 
 #define HEAT_RELAY_PIN D5 // D5 + GND are close on NodeMCU
+#define HEATER_INTERVAL 1000
 
 float heatcycles; // the number of millis out of 1000 for the current heat amount (percent * 10)
 
@@ -20,9 +21,13 @@ void setupHeater() {
     pinMode(HEAT_RELAY_PIN, OUTPUT);
 }
 
-void updateHeater() {
-    boolean h;
-    heatCurrentTime = time_now;
+void _turnHeatElementOnOff(boolean on) {
+    digitalWrite(HEAT_RELAY_PIN, on); //turn pin high
+    heaterState = on;
+}
+
+void updateHeater(unsigned long processingTimestamp) {
+    heatCurrentTime = processingTimestamp;
     if (heatCurrentTime - heatLastTime >= HEATER_INTERVAL or
         heatLastTime > heatCurrentTime) { //second statement prevents overflow errors
         // begin cycle
@@ -48,11 +53,6 @@ void setHeatPowerPercentage(float power) {
 
 float getHeatCycles() {
     return heatcycles;
-}
-
-void _turnHeatElementOnOff(boolean on) {
-    digitalWrite(HEAT_RELAY_PIN, on); //turn pin high
-    heaterState = on;
 }
 
 // End Heater Control

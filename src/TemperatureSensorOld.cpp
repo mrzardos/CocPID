@@ -8,6 +8,7 @@
 #ifndef SIMULATION_MODE
 
 #include <TSIC.h>
+#include <ControllerStatus.h>
 
 // pins for power and signal
 #define TSIC_SIG D4 // D4 pin of NodeMCU just in the right position
@@ -43,7 +44,7 @@ void updateTempSensor() {
   }  
 }
 
-float getTemp() {
+float getTemp(ControllerStatus &pidStatus) {
   float retVal=pidStatus.inputTemperature;
 
   if(CntT>=1) {

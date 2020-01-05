@@ -12,6 +12,9 @@ struct ControllerStatus {
     double P;
     double I;
     double D;
+    bool tuningMode;
+    bool overshootMode;
+    bool poweroffMode;
 };
 
 #endif //ESPRESSIOT_CONTROLLERSTATUS_H

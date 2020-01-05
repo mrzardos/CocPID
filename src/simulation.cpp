@@ -25,14 +25,14 @@ void setupHeater() {
 }
 
 void updateTempSensor() {
-  if (abs(time_now - lastSensTime) >= SIM_TIME) {
-      lastSensTime=time_now;
+  if (abs(processingTimestamp - lastSensTime) >= SIM_TIME) {
+      lastSensTime=processingTimestamp;
       curTemp = (curTemp<SIM_T_START)?(SIM_T_START):(curTemp+(heaterSavedState*SIM_T_HEAT*1e-3)-SIM_T_LOSS);
   }  
 }
 
 void updateHeater() {
-  heatCurrentTime = time_now;
+  heatCurrentTime = processingTimestamp;
   if(heatCurrentTime - heatLastTime >= 1000 or heatLastTime > heatCurrentTime) {
     heaterSavedState = getHeatCycles();
     heatLastTime = heatCurrentTime;   
