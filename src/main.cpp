@@ -15,8 +15,6 @@
 // external definitions
 extern void setupWebSrv();
 
-extern void setupMQTT();
-
 extern void setupHeater();
 
 extern void setupSensor();
@@ -29,11 +27,9 @@ extern float getTemp(ControllerStatus &pidStatus);
 
 extern void tuning_loop(ControllerStatus &pidStatus, unsigned long processingTimestamp);
 
-extern void loopMQTT();
-
 extern void updateHeater(unsigned long processingTimestamp);
 
-extern void loopWebSrv();
+extern void loopWebSrv(PID &pidInstance, ControllerConfig &pidConfig, ControllerStatus &pidStatus);
 
 // WIFI
 #define WIFI_SSID "HomeNetwork"
@@ -114,10 +110,6 @@ void setup() {
     setupWebSrv();
 #endif
 
-#ifdef ENABLE_MQTT
-    setupMQTT();
-#endif
-
     // setup components
     setupHeater();
     setupSensor();
@@ -182,10 +174,6 @@ void loop() {
             }
         }
 
-#ifdef ENABLE_MQTT
-        loopMQTT();
-#endif
-
         serialStatus();
         lastProcessingTimestamp = processingTimestamp;
     }
@@ -193,7 +181,7 @@ void loop() {
     updateHeater(processingTimestamp);
 
 #ifdef ENABLE_HTTP
-    loopWebSrv();
+    loopWebSrv(ESPPID, espressiotConfig, pidStatus);
 #endif
 
 }
