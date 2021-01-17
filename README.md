@@ -5,7 +5,8 @@ This work is based on my previous work with with IoT, MQTT and my small controll
 ## Dependencies
 * Espresso Machine (Gaggic CC, Rancilio Silvia etc.)
 * ESP8266 with [Arduino for ESP8266][1]
-* [Arduino-PID-Library][2]
+* [ArduinoJSON v5][5]
+* [Arduino-PID-Library v1][2] 
 * a suitable temperature sensor (e.g. TSIC 306 - [library here][3])
 * a SSR which is capable of switching your heater, has a low trigger threshold and does not draw too much current (otherwise you will toast your ESP8266)
 * some electronics skills
