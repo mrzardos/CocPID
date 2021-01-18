@@ -14,6 +14,7 @@ This work is based on my previous work with with IoT, MQTT and my small controll
 ## Features
 * very fast and accurate adaptive PID-Controller for the heater of your espresso machine (heat-up-time about 2 minutes, stability/RMS of ~0.15 °C)
 * WWW-Interface for control, configuration and tuning
+* Telnet-Server for PID status (analogous to serial terminal)
 * MQTT-Interface (needs [PubSub-Client][4])
 * OTA-Flash enabled (over-the-air, flash firmware via upload in WWW-Interface)
 * Serial Interface for testing, debugging
