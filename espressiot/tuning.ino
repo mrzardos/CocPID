@@ -1,6 +1,6 @@
 //
 // ESPressIoT Controller for Espresso Machines
-// 2017 by Roman Schmitz
+// 2016-2021 by Roman Schmitz
 //
 // Simple PID tuning procedure
 // based on the blog entry http://brettbeauregard.com/blog/2012/01/arduino-pid-autotune-library/
@@ -64,4 +64,3 @@ void tuning_loop() {
     setHeatPowerPercentage(0);
   }  
 }
-
