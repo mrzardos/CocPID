@@ -107,7 +107,7 @@ void setup()
   if(WiFi.status()!=WL_CONNECTED) {
     Serial.print("Error connection to AP after ");
     Serial.print(MAX_CONNECTION_RETRIES);
-    Serial.println(" retires.");
+    Serial.println(" retries.");
   }
   
   Serial.println("");
