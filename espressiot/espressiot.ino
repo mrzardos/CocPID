@@ -1,3 +1,5 @@
+#include <ArduinoJson.h>
+
 //
 // ESPressIoT Controller for Espresso Machines
 // 2016 by Roman Schmitz
@@ -17,10 +19,11 @@
 // options for special modules
 #define ENABLE_JSON
 #define ENABLE_HTTP
-#define ENABLE_MQTT
+#define ENABLE_TELNET
+//#define ENABLE_MQTT
 
 // use simulation or real heater and sensors
-//#define SIMULATION_MODE
+#define SIMULATION_MODE
 
 //
 // STANDARD reset values based on Gaggia CC
@@ -100,11 +103,21 @@ void setup()
     delay(500);
     Serial.print(".");
   }
+
+  if(WiFi.status()!=WL_CONNECTED) {
+    Serial.print("Error connection to AP after ");
+    Serial.print(MAX_CONNECTION_RETRIES);
+    Serial.println(" retires.");
+  }
   
   Serial.println("");
   Serial.println("WiFi connected.");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
+  #ifdef ENABLE_TELNET
+  setupTelnet();
+  #endif
 
   #ifdef ENABLE_HTTP
   setupWebSrv();
@@ -130,6 +143,8 @@ void setup()
 }
 
 void serialStatus() {
+  Serial.print(time_now); Serial.print(" ");
+  Serial.print(gInputTemp, 2); Serial.print(" ");
   Serial.print(gInputTemp, 2); Serial.print(" ");
   Serial.print(gTargetTemp, 2); Serial.print(" ");
   Serial.print(gOutputPwr, 2); Serial.print(" ");
@@ -174,6 +189,10 @@ void loop() {
     #ifdef ENABLE_MQTT
     loopMQTT();
     #endif
+
+    #ifdef ENABLE_TELNET
+    loopTelnet();
+    #endif
     
     serialStatus();
     time_last=time_now;
@@ -186,4 +205,3 @@ void loop() {
   #endif 
   
 }
-
