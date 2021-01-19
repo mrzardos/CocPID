@@ -1,5 +1,4 @@
-# Created by https://www.toptal.com/developers/gitignore/api/intellij,clion,vscode
-# Edit at https://www.toptal.com/developers/gitignore?templates=intellij,clion,vscode
+*WiFiSecrets.h
 
 ### CLion ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
