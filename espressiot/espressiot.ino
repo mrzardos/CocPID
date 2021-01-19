@@ -9,11 +9,9 @@
 
 #include <PID_v1.h>
 #include <ESP8266WiFi.h>
+#include "WiFiSecrets.h"
 
 // WIFI
-
-#define WIFI_SSID "HomeNetwork"
-#define WIFI_PASS "MyPassword"
 #define MAX_CONNECTION_RETRIES 20
 
 // options for special modules
