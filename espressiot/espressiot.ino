@@ -9,9 +9,12 @@
 
 #include <PID_v1.h>
 #include <ESP8266WiFi.h>
-#include "WiFiSecrets.h"
 
 // WIFI
+//
+// please set your wifi SSID and password in WiFiSecrets.h
+#include "WiFiSecrets.h"
+
 #define MAX_CONNECTION_RETRIES 20
 
 // options for special modules
