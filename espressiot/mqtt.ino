@@ -20,6 +20,11 @@ char buf_msg[50];
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+#define concat(first, second) first second
+const char *mqttConfigTopic = concat(MQTT_TOPIC, "/config/#");
+const char *mqttStatusTopic = concat(MQTT_TOPIC, "/status");
+
+
 void MQTT_reconnect() {
   if (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -28,7 +33,7 @@ void MQTT_reconnect() {
     clientId += String(random(0xffff), HEX);
     if (client.connect(clientId.c_str(), MQTT_USER, MQTT_PASS)) {
       Serial.println("connected");
-      client.subscribe("ESPressIoT/config/#", 1);
+      client.subscribe(mqttConfigTopic, 1);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -56,10 +61,10 @@ void MQTT_callback(char* topic, byte* payload, unsigned int length) {
   double val = msg.toFloat();
   Serial.println(val);
 
-  if (strcmp(topic, "ESPressIoT/config/tset") == 0) {
+  if (strstr(topic, "/config/tset")) {
     if (val > 1e-3) gTargetTemp = val;
   }
-  else if (strcmp(topic, "ESPressIoT/config/toggle") == 0) {
+  else if (strstr(topic, "/config/toggle")) {
     poweroffMode = (!poweroffMode);
   }
 
@@ -79,7 +84,7 @@ void loopMQTT() {
   }
 
   client.loop();
-  client.publish("ESPressIoT/status", gStatusAsJson.c_str());
+  client.publish(mqttStatusTopic, gStatusAsJson.c_str());
 }
 
 #endif ENABLE_MQTT
