@@ -41,31 +41,31 @@ bool loadConfig() {
   // use configFile.readString instead.
   configFile.readBytes(buf.get(), size);
 
-  StaticJsonBuffer<BUF_SIZE> jsonBuffer;
-  JsonObject& json = jsonBuffer.parseObject(buf.get());
+  DynamicJsonDocument jsonDocument(BUF_SIZE);
 
-  if (!json.success()) {
-    Serial.println("Failed to parse config file");
+  DeserializationError parsingError = deserializeJson(jsonDocument, configFile);
+  if (parsingError) {
+    Serial.println("Failed to deserialize json config file");
     return false;
   }
 
-  //wifi_ssid = json["ssid"];
-  //wifi_pass = json["password"];
-  gTargetTemp = json["tset"];
-  gOvershoot = json["tband"];
-  gP = json["P"], gI = json["I"], gD = json["D"];
-  gaP = json["aP"], gaI = json["aI"], gaD = json["aD"];
+  //wifi_ssid = jsonDocument["ssid"];
+  //wifi_pass = jsonDocument["password"];
+  gTargetTemp = jsonDocument["tset"];
+  gOvershoot = jsonDocument["tband"];
+  gP = jsonDocument["P"], gI = jsonDocument["I"], gD = jsonDocument["D"];
+  gaP = jsonDocument["aP"], gaI = jsonDocument["aI"], gaD = jsonDocument["aD"];
 
   return true;
 }
 
 bool saveConfig() {
-  StaticJsonBuffer<BUF_SIZE> jsonBuffer;
-  JsonObject& json = jsonBuffer.createObject();
-  //json["ssid"] = wifi_ssid;  json["password"] = wifi_pass;
-  json["tset"] = gTargetTemp;  json["tband"] = gOvershoot;
-  json["P"] = gP, json["I"] = gI, json["D"] = gD;
-  json["aP"] = gaP, json["aI"] = gaI, json["aD"] = gaD;
+  DynamicJsonDocument jsonDocument(BUF_SIZE);
+
+  //jsonDocument["ssid"] = wifi_ssid;  jsonDocument["password"] = wifi_pass;
+  jsonDocument["tset"] = gTargetTemp;  jsonDocument["tband"] = gOvershoot;
+  jsonDocument["P"] = gP, jsonDocument["I"] = gI, jsonDocument["D"] = gD;
+  jsonDocument["aP"] = gaP, jsonDocument["aI"] = gaI, jsonDocument["aD"] = gaD;
 
   File configFile = SPIFFS.open("/config.json", "w");
   if (!configFile) {
@@ -73,15 +73,20 @@ bool saveConfig() {
     return false;
   }
 
-  json.printTo(configFile);
+  if (serializeJson(jsonDocument, configFile) == 0) {
+    Serial.println(F("Failed to write to file"));
+    return false;
+  }
+
+  configFile.close();
   return true;
 }
 
 void resetConfig() {
- gP=S_P; gI=S_I; gD=S_D;
- gaP=S_aP; gaI=S_aI; gaD=S_aD;
- gTargetTemp=S_TSET;
- gOvershoot=S_TBAND;
+  gP = S_P; gI = S_I; gD = S_D;
+  gaP = S_aP; gaI = S_aI; gaD = S_aD;
+  gTargetTemp = S_TSET;
+  gOvershoot = S_TBAND;
 }
 
 #endif
