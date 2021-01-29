@@ -7,6 +7,7 @@ This work is based on my previous work with with IoT, MQTT and my small controll
 * ESP8266 with [Arduino for ESP8266][1]
 * [ArduinoJSON v5][5]
 * [Arduino-PID-Library v1][2] 
+* [ArduinoStreamUtils][6]
 * a suitable temperature sensor (e.g. TSIC 306 - [library here][3])
 * a SSR which is capable of switching your heater, has a low trigger threshold and does not draw too much current (otherwise you will toast your ESP8266)
 * some electronics skills
@@ -27,3 +28,4 @@ This work is based on my previous work with with IoT, MQTT and my small controll
 [3]: https://github.com/Schm1tz1/arduino-tsic
 [4]: https://github.com/knolleary/pubsubclient
 [5]: https://github.com/bblanchon/ArduinoJson
+[6]: https://github.com/bblanchon/ArduinoStreamUtils/
