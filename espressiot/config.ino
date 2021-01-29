@@ -8,6 +8,7 @@
 #ifdef ENABLE_JSON
 
 #include <ArduinoJson.h>
+#include <StreamUtils.h>
 #include "FS.h"
 
 #define BUF_SIZE 1024
@@ -27,25 +28,13 @@ bool loadConfig() {
     return false;
   }
 
-  size_t size = configFile.size();
-  if (size > 1024) {
-    Serial.println("Config file size is too large");
-    return false;
-  }
-
-  // Allocate a buffer to store contents of the file.
-  std::unique_ptr<char[]> buf(new char[size]);
-
-  // We don't use String here because ArduinoJson library requires the input
-  // buffer to be mutable. If you don't use ArduinoJson, you may as well
-  // use configFile.readString instead.
-  configFile.readBytes(buf.get(), size);
-
   DynamicJsonDocument jsonDocument(BUF_SIZE);
+  ReadLoggingStream loggingStream(configFile, Serial);
 
-  DeserializationError parsingError = deserializeJson(jsonDocument, configFile);
+  DeserializationError parsingError = deserializeJson(jsonDocument, loggingStream);
   if (parsingError) {
     Serial.println("Failed to deserialize json config file");
+    Serial.println(parsingError.c_str());
     return false;
   }
 
@@ -73,10 +62,15 @@ bool saveConfig() {
     return false;
   }
 
-  if (serializeJson(jsonDocument, configFile) == 0) {
+  WriteLoggingStream loggedFile(configFile, Serial);
+
+  size_t writtenBytes = serializeJson(jsonDocument, loggedFile);
+
+  if (writtenBytes == 0) {
     Serial.println(F("Failed to write to file"));
     return false;
   }
+  Serial.println("Bytes written: " + String(writtenBytes));
 
   configFile.close();
   return true;
