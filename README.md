@@ -5,7 +5,7 @@ This work is based on my previous work with with IoT, MQTT and my small controll
 ## Dependencies
 * Espresso Machine (Gaggic CC, Rancilio Silvia etc.)
 * ESP8266 with [Arduino for ESP8266][1]
-* [ArduinoJSON v5][5]
+* [ArduinoJSON v6][5]
 * [Arduino-PID-Library v1][2] 
 * [ArduinoStreamUtils][6]
 * a suitable temperature sensor (e.g. TSIC 306 - [library here][3])
