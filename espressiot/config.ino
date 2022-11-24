@@ -1,7 +1,7 @@
 //
 // ESPressIoT Controller for Espresso Machines
 // 2016-2021 by Roman Schmitz
-// Changed Mark S 11/24/2022
+// Changed Mark S 11/24/2022 - V2
 //
 // JSON Config File on SPIFFS
 //
